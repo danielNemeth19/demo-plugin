@@ -33,8 +33,10 @@ M.push = function (name, mode, mappings)
 	local existing_maps = {}
 	local keymap = vim.api.nvim_get_keymap(mode)
 	for lhs, rhs in pairs(mappings) do
+		vim.keymap.set(mode, lhs, rhs)
 		local existing = find_mapping(keymap, lhs)
 		if existing then
+			print("found:", lhs)
 			table.insert(existing_maps, existing)
 		end
 	end
@@ -46,10 +48,10 @@ M.pop = function (name, mappings)
 end
 
 
-M.push("debug_mode", "n", {
-	[" a"] = "echo 'Hello a'",
-	[" b"] = "echo 'Hello b'"
-})
+--M.push("debug_mode", "n", {
+---	[" a"] = "echo 'Hello a'",
+--	[" b"] = "echo 'Hello b'"
+--})
 
 --[[
 -- User would then
