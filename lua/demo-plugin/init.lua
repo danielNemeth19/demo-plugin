@@ -36,30 +36,31 @@ M.push = function (name, mode, mappings)
 		vim.keymap.set(mode, lhs, rhs)
 		local existing = find_mapping(keymap, lhs)
 		if existing then
-			existing_maps[lhs] = rhs
+			existing_maps[lhs] = existing
 		end
 	end
-	M._stack[name] = {
+
+	M._stack[name] = M._stack[name] or {}
+	M._stack[name][mode] = {
 		existing = existing_maps,
 		mappings = mappings,
-		mode = mode
 	}
 end
 
 
-M.pop = function (name)
-	local state = M._stack[name]
-	M._stack[name] = nil
+M.pop = function (name, mode)
+	local state = M._stack[name][mode]
+	M._stack[name][mode] = nil
 	-- created mappings will need to be dropped
 	-- existing mappings (existing from before push) need to be reinstated
-	for lhs, rhs in pairs(state.mappings) do
-		print("lhs" .. lhs)
+	for lhs, _ in pairs(state.mappings) do
 		if state.existing[lhs] then
 			-- handle re-instating mappings
+			local original_mapping = state.existing[lhs]
+			vim.keymap.set(mode, lhs, original_mapping.rhs)
 		else
-			vim.api.nvim_del_keymap(state.mode, lhs)
+			vim.api.nvim_del_keymap(mode, lhs)
 		end
-
 	end
 end
 
