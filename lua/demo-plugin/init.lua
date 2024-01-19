@@ -1,24 +1,6 @@
 print("loaded demo-plugin/init.lua")
 local M = {}
 
---M.setup = function(opts)
---	print("Options: ", opts)
---end
---
---to set keymap: vim.keymap.set()
---to get keymap: nvim_get_keymap()
-
-local list_mappings = function()
-	local keymap = vim.api.nvim_get_keymap("n")
-	for i, value in ipairs(keymap) do
-		if value.rhs then
-			print("HAS", i)
-		else
-			print("not", i)
-		end
-	end
-end
-
 local find_mapping = function(maps, lhs)
 	for _, value in ipairs(maps) do
 		if value.lhs == lhs then
